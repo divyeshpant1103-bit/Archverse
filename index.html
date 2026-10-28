@@ -19,17 +19,8 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        gray: {
-                            850: '#1f2937',
-                            900: '#111827',
-                            950: '#030712',
-                        },
-                        neon: {
-                            blue: '#3b82f6',
-                            purple: '#8b5cf6',
-                            green: '#10b981',
-                            red: '#ef4444',
-                        }
+                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' },
+                        neon: { blue: '#3b82f6', purple: '#8b5cf6', green: '#10b981', red: '#ef4444' }
                     },
                     boxShadow: {
                         'neon-purple': '0 0 15px rgba(139, 92, 246, 0.4)',
@@ -40,146 +31,144 @@
         }
     </script>
     <style>
-        body {
-            background-color: #030712;
-            color: #f3f4f6;
-        }
-
-        .input-dark {
-            background-color: #1f2937;
-            border: 1px solid #374151;
-            color: #f9fafb;
-            transition: all 0.2s;
-        }
-
-        .input-dark:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
-            outline: none;
-        }
-
-        .glass-panel {
-            background: rgba(31, 41, 55, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(55, 65, 81, 0.8);
-        }
-
-        /* Custom Scrollbar for Textareas and Logs */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #111827;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-
-        .spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        body { background-color: #030712; color: #f3f4f6; }
+        .input-dark { background-color: #1f2937; border: 1px solid #374151; color: #f9fafb; transition: all 0.2s; }
+        .input-dark:focus { border-color: #8b5cf6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); outline: none; }
+        .glass-panel { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(55, 65, 81, 0.8); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+        .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 
 <body class="min-h-screen p-4 md:p-8">
-
     <div class="max-w-7xl mx-auto space-y-8">
 
-        <!-- Header -->
         <header class="text-center py-6 border-b border-gray-800">
-            <h1
-                class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-neon-purple tracking-tight mb-2">
+            <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-neon-purple tracking-tight mb-2">
                 ArchVerse Testing Dashboard
             </h1>
             <p class="text-gray-400 font-mono text-sm tracking-widest uppercase">Utopia @ Graphic Era University</p>
         </header>
 
-        <!-- Configuration Area -->
+        <div id="simBanner" class="hidden rounded-xl border border-yellow-500 bg-yellow-900/30 text-yellow-300 font-mono text-sm p-4 text-center">
+            SIMULATION MODE: requests go to a built-in fake server, not a team's server. Results are NOT a team's score.
+        </div>
+
         <section class="glass-panel rounded-2xl p-6 shadow-xl">
-            <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-6 border-b border-gray-800 pb-4">
                 <h2 class="text-xl font-semibold flex items-center gap-2">
                     <i class="fas fa-sliders h-5 w-5 text-neon-purple"></i> API Configuration
                 </h2>
-                <div class="flex items-center gap-2 text-sm">
-                    <input type="checkbox" id="mockMode"
-                        class="w-4 h-4 rounded bg-gray-800 border-gray-700 text-neon-purple focus:ring-neon-purple">
-                    <label for="mockMode" class="text-gray-300 font-mono cursor-pointer">Force Simulation Mode</label>
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                    <label class="flex items-center gap-2 text-gray-300 font-mono cursor-pointer">
+                        <input type="checkbox" id="mockMode" class="w-4 h-4 rounded bg-gray-800 border-gray-700"> Simulation Mode (self-test)
+                    </label>
+                    <label class="flex items-center gap-2 text-gray-300 font-mono cursor-pointer">
+                        <input type="checkbox" id="mockBuggy" class="w-4 h-4 rounded bg-gray-800 border-gray-700"> Simulate a BUGGY server
+                    </label>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Endpoints -->
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Problem Statement</label>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Team name (for the report)</label>
+                        <input type="text" id="teamName" placeholder="Team 7" class="w-full input-dark rounded-lg p-2.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Problem Statement (loads defaults for everything below)</label>
                         <select id="psSelect" class="w-full input-dark rounded-lg p-2.5 text-sm">
                             <option value="canteen">PS 1: Ravi Canteen Ordering</option>
                             <option value="seats">PS 2: Seminar Hall Seat Booking</option>
-                            <option value="rides">PS 3: Weekend Exodus (Flash Ride-Sharing)</option>
-                            <option value="coupons">PS 4: The Golden Ticket (Coupon Drop)</option>
+                            <option value="rides">PS 3: Flash Ride-Sharing to ISBT</option>
+                            <option value="coupons">PS 4: GRAFEST Coupon Drop</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Base URL (Leave empty for
-                            mock)</label>
-                        <input type="text" id="baseUrl" placeholder="http://localhost:3000"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Team's Base URL</label>
+                        <input type="text" id="baseUrl" placeholder="http://localhost:3000" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
                     </div>
                     <div>
                         <label class="block text-xs font-mono text-gray-400 mb-1">View Endpoint Path (GET)</label>
-                        <input type="text" id="viewPath" value="/api/view"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        <input type="text" id="viewPath" value="/api/view" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Reserve Endpoint Path (POST)</label>
-                        <input type="text" id="reservePath" value="/api/reserve"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Reserve / Claim Endpoint Path (POST)</label>
+                        <input type="text" id="reservePath" value="/api/reserve" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Status Update Path (PATCH)</label>
-                        <input type="text" id="statusPath" value="/api/status"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Status Update Path (PATCH) <span class="text-neon-purple">(may contain {{ID}})</span></label>
+                        <input type="text" id="statusPath" value="/api/status" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Race: number of requests</label>
+                            <input type="number" id="raceCount" min="1" max="500" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Race: stock available</label>
+                            <input type="number" id="capacity" min="1" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Idempotency: duplicates</label>
+                            <input type="number" id="dupCount" min="2" max="100" value="10" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">State after reserve (0-based index)</label>
+                            <input type="number" id="startIdx" min="0" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-gray-300 font-mono cursor-pointer">
+                        <input type="checkbox" id="poolMode" class="w-4 h-4 rounded bg-gray-800 border-gray-700">
+                        Idempotency and Race draw from one shared stock pool
+                    </label>
                 </div>
 
-                <!-- Payloads -->
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Reserve JSON Payload <span
-                                class="text-neon-purple text-xs">(Use {{USER_ID}})</span></label>
-                        <textarea id="reservePayload" rows="3"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">{"itemId": "item_1", "userId": "{{USER_ID}}"}</textarea>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Race payload <span class="text-neon-purple">(use {{USER_ID}})</span></label>
+                        <textarea id="racePayload" rows="2" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono"></textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Out-of-Stock JSON Payload (For
-                            Rejection Test)</label>
-                        <textarea id="rejectionPayload" rows="2"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">{"itemId": "invalid_or_empty_item", "userId": "test99"}</textarea>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Idempotency payload <span class="text-neon-purple">(use {{USER_ID}})</span></label>
+                        <textarea id="idemPayload" rows="2" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono"></textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-mono text-gray-400 mb-1">Invalid State JSON Payload (For Status
-                            Test)</label>
-                        <textarea id="statePayload" rows="2"
-                            class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">{"orderId": "123", "status": "FINAL_STATE"}</textarea>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Invalid-item payload (Rejection test) <span class="text-neon-purple">(use {{USER_ID}})</span></label>
+                        <textarea id="rejectPayload" rows="2" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Status payload <span class="text-neon-purple">(use {{ID}} and {{STATUS}})</span></label>
+                        <textarea id="statePayload" rows="2" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">{"id": "{{ID}}", "status": "{{STATUS}}"}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-gray-400 mb-1">Status sequence (comma-separated, spelled exactly as the team spells them)</label>
+                        <input type="text" id="seq" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Stock field in View response (optional)</label>
+                            <input type="text" id="remainingPath" placeholder="auto-detect, e.g. data.remaining" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 mb-1">Record ID field in Reserve response (optional)</label>
+                            <input type="text" id="idPath" placeholder="auto-detect, e.g. data.orderId" class="w-full input-dark rounded-lg p-2.5 text-sm font-mono">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 flex justify-center">
+            <p class="mt-6 text-xs text-gray-500 font-mono">
+                Restart the team's server before each run: the tests consume stock, and a second run on the same server cannot prove anything.
+                Idempotency runs before Race because both use the same stock. Browsers send at most ~6 requests at once to one server, so the
+                burst is partly staggered. Always read the team's SQL for non-atomic read-then-write updates.
+            </p>
+
+            <div class="mt-6 flex justify-center">
                 <button id="runTestsBtn"
                     class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-10 rounded-full shadow-neon-purple transform transition hover:scale-105 active:scale-95 flex items-center gap-3">
                     <i class="fas fa-play"></i> RUN AUTOMATED TESTS
@@ -187,241 +176,522 @@
             </div>
         </section>
 
-        <!-- Results Panel -->
-        <section class="space-y-4" id="resultsContainer">
-            <!-- Test Cards will be generated here -->
+        <section id="summary" class="hidden glass-panel rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <div id="summaryTitle" class="text-xl font-bold"></div>
+                    <div id="summaryDetail" class="text-sm text-gray-400 font-mono mt-1"></div>
+                </div>
+                <button id="copyBtn" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-200 font-mono text-sm py-2 px-5 rounded-full">
+                    <i class="fas fa-copy"></i> Copy report
+                </button>
+            </div>
         </section>
+
+        <section class="space-y-4" id="resultsContainer"></section>
     </div>
 
     <script>
-        const testsConfig = [
-            { id: 'test-1', title: '1. View Endpoint Load Test', desc: 'Fires 100 simultaneous GET requests. Expects 2xx responses.' },
-            { id: 'test-2', title: '2. The Race (Concurrency)', desc: 'Fires 10 simultaneous POST requests with DIFFERENT user IDs. Expects exactly 1 success (2xx) and 9 rejects (4xx).' },
-            { id: 'test-3', title: '3. Idempotency Check', desc: 'Fires 10 simultaneous POST requests with the SAME user ID. Expects safe handling (no 5xx crashes).' },
-            { id: 'test-4', title: '4. Rejection Logic', desc: 'Fires 1 POST for an explicitly out-of-stock item. Expects clean 4xx rejection.' },
-            { id: 'test-5', title: '5. State Machine Jump', desc: 'Fires 1 PATCH trying to jump to a final state directly. Expects 4xx rejection.' },
-        ];
+        const $ = id => document.getElementById(id);
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        // Initialize UI
-        const resultsContainer = document.getElementById('resultsContainer');
-        testsConfig.forEach(test => {
-            resultsContainer.innerHTML += `
-                <div id="${test.id}-card" class="glass-panel rounded-xl p-5 border-l-4 border-gray-600 transition-colors duration-300">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-200">${test.title}</h3>
-                            <p class="text-sm text-gray-400">${test.desc}</p>
-                        </div>
-                        <div id="${test.id}-status" class="flex items-center gap-2 font-mono text-sm font-bold text-gray-500 bg-gray-800 px-3 py-1 rounded-full">
-                            <i class="fas fa-minus"></i> IDLE
-                        </div>
-                    </div>
-                    <div class="mt-3 bg-gray-950 rounded-lg p-3 border border-gray-800">
-                        <pre id="${test.id}-log" class="text-xs font-mono text-gray-400 h-20 overflow-y-auto whitespace-pre-wrap">Awaiting execution...</pre>
-                    </div>
-                </div>
-            `;
+        /* ------------------------------------------------------------------ */
+        /* Per-problem-statement defaults                                      */
+        /* ------------------------------------------------------------------ */
+        const PRESETS = {
+            canteen: {
+                raceCount: 100, capacity: 20, startIdx: 0, pool: true, crossBook: false,
+                race: '{"itemId": "special_1", "userId": "{{USER_ID}}"}',
+                idem: '{"itemId": "special_1", "userId": "{{USER_ID}}"}',
+                reject: '{"itemId": "does_not_exist", "userId": "{{USER_ID}}"}',
+                seq: 'Placed,Preparing,Ready,Collected'
+            },
+            seats: {
+                raceCount: 10, capacity: 1, startIdx: 0, pool: false, crossBook: false,
+                race: '{"seatId": "A1", "userId": "{{USER_ID}}"}',
+                idem: '{"seatId": "A2", "userId": "{{USER_ID}}"}',
+                reject: '{"seatId": "Z99", "userId": "{{USER_ID}}"}',
+                seq: 'Booked,Checked-in,Completed'
+            },
+            rides: {
+                raceCount: 10, capacity: 4, startIdx: 0, pool: false, crossBook: true,
+                race: '{"cabId": "cab_1", "userId": "{{USER_ID}}"}',
+                idem: '{"cabId": "cab_2", "userId": "{{USER_ID}}"}',
+                reject: '{"cabId": "cab_99", "userId": "{{USER_ID}}"}',
+                seq: 'Matched,Boarded,In Transit,Dropped'
+            },
+            coupons: {
+                raceCount: 100, capacity: 50, startIdx: 1, pool: true, crossBook: false,
+                race: '{"couponId": "GRAFEST", "userId": "{{USER_ID}}"}',
+                idem: '{"couponId": "GRAFEST", "userId": "{{USER_ID}}"}',
+                reject: '{"couponId": "does_not_exist", "userId": "{{USER_ID}}"}',
+                seq: 'Unclaimed,Claimed,Redeemed,Expired'
+            }
+        };
+
+        function applyPreset() {
+            const p = PRESETS[$('psSelect').value];
+            $('raceCount').value = p.raceCount;
+            $('capacity').value = p.capacity;
+            $('startIdx').value = p.startIdx;
+            $('poolMode').checked = p.pool;
+            $('racePayload').value = p.race;
+            $('idemPayload').value = p.idem;
+            $('rejectPayload').value = p.reject;
+            $('seq').value = p.seq;
+        }
+        $('psSelect').addEventListener('change', applyPreset);
+        applyPreset();
+
+        $('mockMode').addEventListener('change', () => {
+            $('simBanner').classList.toggle('hidden', !$('mockMode').checked);
         });
 
-        const runBtn = document.getElementById('runTestsBtn');
-        runBtn.addEventListener('click', runAllTests);
+        /* ------------------------------------------------------------------ */
+        /* Test cards                                                          */
+        /* ------------------------------------------------------------------ */
+        const TESTS = [
+            { id: 'test-1', title: '1. View Endpoint Load Test', desc: '100 simultaneous GET requests. Every one must return 2xx.' },
+            { id: 'test-2', title: '2. The Race (Concurrency)', desc: 'Many simultaneous reserves from DIFFERENT users. Successes must equal the stock exactly: no oversell, no undersell, no 5xx.' },
+            { id: 'test-3', title: '3. Idempotency Check', desc: 'Simultaneous identical requests from ONE user. Must create one record and deduct one unit (runs before the race).' },
+            { id: 'test-4', title: '4. Rejection Logic', desc: 'A sold-out target and an invalid item must both be cleanly rejected with 4xx (PS 3 also: user already in another cab).' },
+            { id: 'test-5', title: '5. State Machine', desc: 'The valid next step must succeed. Skipping a step and going backwards must be rejected with 4xx.' },
+        ];
 
-        // Helper to update UI
-        function updateTestUI(id, status, logStr) {
-            const card = document.getElementById(`${id}-card`);
-            const statusBadge = document.getElementById(`${id}-status`);
-            const logBox = document.getElementById(`${id}-log`);
+        const STYLES = {
+            IDLE: { badge: 'text-gray-500 bg-gray-800', border: 'border-gray-600', html: '<i class="fas fa-minus"></i> IDLE' },
+            RUNNING: { badge: 'text-blue-400 bg-blue-900/30', border: 'border-blue-500', html: '<i class="fas fa-circle-notch spinner"></i> RUNNING' },
+            PASS: { badge: 'text-green-400 bg-green-900/30', border: 'border-green-500', html: '<i class="fas fa-check"></i> PASS' },
+            WARN: { badge: 'text-yellow-300 bg-yellow-900/30', border: 'border-yellow-500', html: '<i class="fas fa-triangle-exclamation"></i> JUDGE CHECK' },
+            FAIL: { badge: 'text-red-400 bg-red-900/30', border: 'border-red-500', html: '<i class="fas fa-times"></i> FAIL' },
+        };
 
-            logBox.innerText += (logBox.innerText === 'Awaiting execution...' ? '' : '\n') + logStr;
-            logBox.scrollTop = logBox.scrollHeight;
+        const resultsContainer = $('resultsContainer');
+        TESTS.forEach(t => {
+            resultsContainer.insertAdjacentHTML('beforeend', `
+                <div id="${t.id}-card" class="glass-panel rounded-xl p-5 border-l-4 border-gray-600 transition-colors duration-300">
+                    <div class="flex justify-between items-start mb-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-200">${t.title}</h3>
+                            <p class="text-sm text-gray-400">${t.desc}</p>
+                        </div>
+                        <div id="${t.id}-status" class="shrink-0 flex items-center gap-2 font-mono text-sm font-bold px-3 py-1 rounded-full"></div>
+                    </div>
+                    <div class="mt-3 bg-gray-950 rounded-lg p-3 border border-gray-800">
+                        <pre id="${t.id}-log" class="text-xs font-mono text-gray-400 h-28 overflow-y-auto whitespace-pre-wrap"></pre>
+                    </div>
+                </div>`);
+        });
 
-            statusBadge.className = 'flex items-center gap-2 font-mono text-sm font-bold px-3 py-1 rounded-full';
-            card.className = 'glass-panel rounded-xl p-5 border-l-4 transition-colors duration-300';
-
-            if (status === 'RUNNING') {
-                statusBadge.classList.add('text-blue-400', 'bg-blue-900/30');
-                statusBadge.innerHTML = `<i class="fas fa-circle-notch spinner"></i> RUNNING`;
-                card.classList.add('border-blue-500');
-            } else if (status === 'PASS') {
-                statusBadge.classList.add('text-green-400', 'bg-green-900/30');
-                statusBadge.innerHTML = `<i class="fas fa-check"></i> PASS`;
-                card.classList.add('border-green-500');
-            } else if (status === 'FAIL') {
-                statusBadge.classList.add('text-red-400', 'bg-red-900/30');
-                statusBadge.innerHTML = `<i class="fas fa-times"></i> FAIL`;
-                card.classList.add('border-red-500');
-            }
+        function setStatus(id, status) {
+            const s = STYLES[status];
+            $(`${id}-status`).className = 'shrink-0 flex items-center gap-2 font-mono text-sm font-bold px-3 py-1 rounded-full ' + s.badge;
+            $(`${id}-status`).innerHTML = s.html;
+            $(`${id}-card`).className = 'glass-panel rounded-xl p-5 border-l-4 transition-colors duration-300 ' + s.border;
+            $(`${id}-status`).dataset.status = status;
         }
-
+        function log(id, line) {
+            const box = $(`${id}-log`);
+            box.textContent += (box.textContent ? '\n' : '') + line;
+            box.scrollTop = box.scrollHeight;
+        }
         function resetUI() {
-            testsConfig.forEach(test => {
-                document.getElementById(`${test.id}-log`).innerText = '';
-                updateTestUI(test.id, 'IDLE', 'Awaiting execution...');
-            });
+            TESTS.forEach(t => { $(`${t.id}-log`).textContent = ''; log(t.id, 'Awaiting execution...'); setStatus(t.id, 'IDLE'); });
+            $(`summary`).classList.add('hidden');
+        }
+        resetUI();
+        // First real line replaces the placeholder
+        const _log = log;
+        log = function (id, line) {
+            const box = $(`${id}-log`);
+            if (box.textContent === 'Awaiting execution...') box.textContent = '';
+            _log(id, line);
+        };
+
+        /* ------------------------------------------------------------------ */
+        /* Helpers                                                             */
+        /* ------------------------------------------------------------------ */
+        const kind = r => (r.status >= 200 && r.status < 300) ? '2xx' : (r.status >= 400 && r.status < 500) ? '4xx' : 'bad';
+        const tally = rs => ({
+            ok: rs.filter(r => kind(r) === '2xx').length,
+            rej: rs.filter(r => kind(r) === '4xx').length,
+            bad: rs.filter(r => kind(r) === 'bad').length,
+        });
+        const fill = (tpl, vars) => Object.entries(vars).reduce((s, [k, v]) => s.split(`{{${k}}}`).join(String(v)), tpl);
+        const tryParse = t => { try { return JSON.parse(t); } catch (e) { return null; } };
+        const getByPath = (o, p) => p.split('.').filter(Boolean).reduce((a, k) => (a == null ? undefined : a[k]), o);
+        const firstNonUser = obj => { const e = Object.entries(obj || {}).filter(([k]) => !/user/i.test(k)); return e.length ? String(e[0][1]) : null; };
+        const firstUser = obj => { const e = Object.entries(obj || {}).find(([k]) => /user/i.test(k)); return e ? String(e[1]) : null; };
+
+        const ID_KEYS = ['orderId', 'bookingId', 'reservationId', 'claimId', 'couponId', 'rideId', 'ticketId', 'id', '_id'];
+        function extractId(json, ignore) {
+            if (json == null) return null;
+            const p = $('idPath').value.trim();
+            if (p) { const v = getByPath(json, p); return v == null ? null : String(v); }
+            const walk = (o, d) => {
+                if (o == null || typeof o !== 'object' || d > 3) return null;
+                for (const k of ID_KEYS) {
+                    if (o[k] != null && typeof o[k] !== 'object' && String(o[k]) !== ignore) return String(o[k]);
+                }
+                for (const v of Object.values(o)) { const r = walk(v, d + 1); if (r != null) return r; }
+                return null;
+            };
+            return walk(json, 0);
         }
 
-        // Mock Fetch function to simulate API calls if no Base URL is provided
-        async function smartFetch(url, options = {}) {
-            const baseUrl = document.getElementById('baseUrl').value.trim();
-            const forceMock = document.getElementById('mockMode').checked;
-
-            if (!baseUrl || forceMock) {
-                // SIMULATION LOGIC
-                await new Promise(r => setTimeout(r, Math.random() * 200 + 50)); // Fake network delay
-
-                let status = 200;
-
-                // Simulate Test 2 (Race) - Only first mock request per item wins
-                if (url.includes('reserve') && options.body) {
-                    if (!window.mockInventory) window.mockInventory = 1;
-                    if (options.body.includes('invalid_or_empty')) {
-                        status = 400; // Out of stock
-                    } else if (window.mockInventory > 0) {
-                        window.mockInventory--;
-                        status = 200;
-                    } else {
-                        status = 409; // Conflict/Out of stock
+        function findRemaining(json) {
+            const p = $('remainingPath').value.trim();
+            if (p) {
+                const v = getByPath(json, p);
+                return Array.isArray(v) ? v.length : (typeof v === 'number' ? v : null);
+            }
+            const walk = (o, d) => {
+                if (o == null || typeof o !== 'object' || d > 3) return null;
+                for (const [k, v] of Object.entries(o)) {
+                    if (/remain|avail|stock|left/i.test(k)) {
+                        if (typeof v === 'number') return v;
+                        if (Array.isArray(v)) return v.length;
                     }
                 }
-
-                // Simulate Test 5 (Status)
-                if (url.includes('status') && options.method === 'PATCH') {
-                    status = 400; // Invalid state transition mock
-                }
-
-                return {
-                    ok: status >= 200 && status < 300,
-                    status: status,
-                    text: async () => `{"mocked": true, "status": ${status}}`
-                };
-            } else {
-                // REAL FETCH
-                try {
-                    return await fetch(url, options);
-                } catch (e) {
-                    return { ok: false, status: 0, text: async () => `Network Error: ${e.message}. Is CORS enabled?` };
-                }
-            }
+                for (const v of Object.values(o)) { const r = walk(v, d + 1); if (r != null) return r; }
+                return null;
+            };
+            return walk(json, 0);
         }
+
+        /* ------------------------------------------------------------------ */
+        /* Network layer (real fetch or built-in simulator)                    */
+        /* ------------------------------------------------------------------ */
+        let ctx = null;
+
+        async function realFetch(method, url, body) {
+            const ctl = new AbortController();
+            const timer = setTimeout(() => ctl.abort(), 10000);
+            try {
+                const r = await fetch(url, {
+                    method, signal: ctl.signal,
+                    headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
+                    body
+                });
+                return { status: r.status, text: await r.text() };
+            } catch (e) {
+                const why = e.name === 'AbortError' ? 'Timed out after 10s' : `Network error: ${e.message}. Is the server running, and does it allow CORS (including PATCH and OPTIONS)?`;
+                return { status: 0, text: why };
+            } finally { clearTimeout(timer); }
+        }
+
+        async function request(method, path, body) {
+            const t0 = performance.now();
+            const res = ctx.mock ? await mockHandle(method, path, body) : await realFetch(method, ctx.base + path, body);
+            res.ms = performance.now() - t0;
+            res.json = tryParse(res.text);
+            return res;
+        }
+
+        /* ---- Simulator: a correct server, or a deliberately racy one ---- */
+        let sim = null;
+        function resetSim() {
+            sim = { stock: new Map(), users: new Map(), records: new Map(), nextId: 1 };
+        }
+        const simInvalid = k => /(invalid|does_not_exist|unknown|99)/i.test(k);
+        const simRes = (status, obj) => ({ status, text: JSON.stringify(obj) });
+
+        async function mockHandle(method, path, bodyStr) {
+            await sleep(5 + Math.random() * 25);
+            const cfg = ctx.cfg, buggy = ctx.buggy;
+            const body = tryParse(bodyStr) || {};
+
+            if (method === 'GET') {
+                const poolKey = firstNonUser(tryParse(fill(cfg.race, { USER_ID: 'x' })));
+                const remaining = sim.stock.has(poolKey) ? sim.stock.get(poolKey) : cfg.capacity;
+                return simRes(200, { items: [], remaining });
+            }
+
+            if (method === 'POST') {
+                const key = firstNonUser(body), user = firstUser(body);
+                if (!key || !user || simInvalid(key)) return simRes(400, { error: 'invalid request' });
+                if (!sim.stock.has(key)) sim.stock.set(key, cfg.capacity);
+                const ukey = user + '|' + key;
+                if (!buggy) {
+                    // Atomic: no await between the check and the write.
+                    if (sim.users.has(ukey)) return simRes(200, { id: sim.users.get(ukey) });
+                    if (cfg.crossBook && [...sim.users.keys()].some(k => k.startsWith(user + '|') && k !== ukey))
+                        return simRes(409, { error: 'already booked elsewhere' });
+                    if (sim.stock.get(key) <= 0) return simRes(409, { error: 'sold out' });
+                    sim.stock.set(key, sim.stock.get(key) - 1);
+                    const id = 'rec_' + sim.nextId++;
+                    sim.users.set(ukey, id);
+                    sim.records.set(id, { idx: cfg.startIdx });
+                    return simRes(201, { id });
+                }
+                // Buggy: read, wait, write (a lost update), no duplicate check.
+                const seen = sim.stock.get(key);
+                await sleep(20 + Math.random() * 40);
+                if (seen <= 0) return simRes(409, { error: 'sold out' });
+                sim.stock.set(key, seen - 1);
+                const id = 'rec_' + sim.nextId++;
+                sim.records.set(id, { idx: cfg.startIdx });
+                return simRes(201, { id });
+            }
+
+            if (method === 'PATCH') {
+                const id = extractId(body), rec = sim.records.get(id);
+                if (!rec) return simRes(404, { error: 'not found' });
+                const idx = cfg.seq.findIndex(s => s.toLowerCase() === String(body.status).toLowerCase());
+                if (idx < 0) return simRes(400, { error: 'unknown status' });
+                if (!buggy && idx !== rec.idx + 1) return simRes(400, { error: 'invalid transition' });
+                rec.idx = idx;
+                return simRes(200, { id, status: cfg.seq[idx] });
+            }
+            return simRes(405, {});
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Config reading                                                      */
+        /* ------------------------------------------------------------------ */
+        function readConfig() {
+            const p = PRESETS[$('psSelect').value];
+            const cfg = {
+                viewPath: $('viewPath').value.trim(),
+                reservePath: $('reservePath').value.trim(),
+                statusPath: $('statusPath').value.trim(),
+                race: $('racePayload').value,
+                idem: $('idemPayload').value,
+                reject: $('rejectPayload').value,
+                state: $('statePayload').value,
+                seq: $('seq').value.split(',').map(s => s.trim()).filter(Boolean),
+                raceCount: parseInt($('raceCount').value, 10),
+                capacity: parseInt($('capacity').value, 10),
+                dupCount: parseInt($('dupCount').value, 10),
+                startIdx: parseInt($('startIdx').value, 10),
+                pool: $('poolMode').checked,
+                crossBook: p.crossBook,
+            };
+            [['Race payload', cfg.race], ['Idempotency payload', cfg.idem], ['Invalid-item payload', cfg.reject]].forEach(([n, t]) => {
+                if (!tryParse(fill(t, { USER_ID: 'u' }))) throw new Error(`${n} is not valid JSON.`);
+            });
+            if (!tryParse(fill(cfg.state, { ID: '1', STATUS: 'x' }))) throw new Error('Status payload is not valid JSON.');
+            if (!(cfg.raceCount >= 1 && cfg.raceCount <= 500)) throw new Error('Race requests must be 1 to 500.');
+            if (!(cfg.capacity >= 1)) throw new Error('Stock available must be at least 1.');
+            if (!(cfg.dupCount >= 2 && cfg.dupCount <= 100)) throw new Error('Duplicates must be 2 to 100.');
+            if (cfg.seq.length < 3) throw new Error('Status sequence needs at least 3 states.');
+            if (!(cfg.startIdx >= 0 && cfg.startIdx <= cfg.seq.length - 3)) throw new Error('"State after reserve" must leave at least two states after it.');
+            return cfg;
+        }
+
+        async function getRemaining() {
+            const r = await request('GET', ctx.cfg.viewPath);
+            return r.json == null ? null : findRemaining(r.json);
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* The five tests                                                      */
+        /* ------------------------------------------------------------------ */
+        async function test1() {
+            const id = 'test-1', c = ctx.cfg;
+            log(id, 'Firing 100 simultaneous GET requests...');
+            const rs = await Promise.all(Array.from({ length: 100 }, () => request('GET', c.viewPath)));
+            const t = tally(rs);
+            const lat = rs.map(r => r.ms).sort((a, b) => a - b);
+            const p95 = lat[Math.min(lat.length - 1, Math.ceil(lat.length * 0.95) - 1)];
+            log(id, `${t.ok}/100 returned 2xx, ${t.rej} returned 4xx, ${t.bad} failed. p95 latency ${Math.round(p95)} ms.`);
+            if (t.ok === 100) return 'PASS';
+            const sample = rs.find(r => kind(r) !== '2xx');
+            log(id, `Example failure: HTTP ${sample.status} ${String(sample.text).slice(0, 120)}`);
+            return 'FAIL';
+        }
+
+        async function testIdempotency() {
+            const id = 'test-3', c = ctx.cfg;
+            const user = `${ctx.runId}_idem`;
+            const payload = fill(c.idem, { USER_ID: user });
+            const itemKey = firstNonUser(tryParse(payload));
+            const before = c.pool ? await getRemaining() : null;
+            log(id, `Firing ${c.dupCount} simultaneous identical requests from one user...`);
+            const rs = await Promise.all(Array.from({ length: c.dupCount }, () => request('POST', c.reservePath, payload)));
+            const t = tally(rs);
+            const after = c.pool ? await getRemaining() : null;
+            const ids = [...new Set(rs.filter(r => kind(r) === '2xx').map(r => extractId(r.json, itemKey)).filter(x => x != null))];
+            ctx.shared.idemId = ids[0] || null;
+            ctx.shared.idemUnits = t.ok > 0 ? 1 : 0;
+            log(id, `${t.ok} x 2xx, ${t.rej} x 4xx, ${t.bad} x failed. Distinct record IDs in 2xx replies: ${ids.length}.`);
+
+            if (t.bad > 0) { log(id, 'Server errors or network failures on duplicate requests.'); return 'FAIL'; }
+            if (t.ok === 0) { log(id, 'No request succeeded, so nothing was proven. Check the payload field names and that stock is available.'); return 'FAIL'; }
+            if (ids.length > 1) { log(id, `Duplicate records were created (${ids.length} different IDs for one user).`); return 'FAIL'; }
+            let verified = ids.length === 1;
+            if (c.pool && before != null && after != null) {
+                const delta = before - after;
+                log(id, `Stock before ${before}, after ${after}: ${delta} unit(s) deducted.`);
+                if (delta !== 1) { log(id, `Expected exactly 1 unit deducted, got ${delta}.`); return 'FAIL'; }
+                verified = true;
+            }
+            if (!verified) {
+                log(id, 'No record ID or stock count could be read from the responses. Set the ID / stock field above, or check the DB by hand.');
+                return 'WARN';
+            }
+            return 'PASS';
+        }
+
+        async function testRace() {
+            const id = 'test-2', c = ctx.cfg, R = c.raceCount;
+            const rem = c.pool ? await getRemaining() : null;
+            let expected;
+            if (rem != null) {
+                expected = Math.min(R, rem);
+                log(id, `Stock before the race (read from View): ${rem}.`);
+            } else {
+                expected = Math.min(R, c.capacity - (c.pool ? ctx.shared.idemUnits : 0));
+                log(id, `Stock not readable from View. Assuming ${expected} available (stock ${c.capacity}${c.pool ? ', minus 1 used by the idempotency test' : ''}). The server must be freshly started.`);
+            }
+            if (expected <= 0) { log(id, 'Stock is already empty. Restart the team\'s server and run again.'); return 'WARN'; }
+            log(id, `Firing ${R} simultaneous requests from ${R} different users. Expecting exactly ${expected} success(es).`);
+            const users = Array.from({ length: R }, (_, i) => `${ctx.runId}_race_${i}`);
+            const rs = await Promise.all(users.map(u => request('POST', c.reservePath, fill(c.race, { USER_ID: u }))));
+            const t = tally(rs);
+            ctx.shared.winners = users.filter((u, i) => kind(rs[i]) === '2xx');
+            ctx.shared.raceIds = rs.filter(r => kind(r) === '2xx').map(r => extractId(r.json, firstNonUser(tryParse(fill(c.race, { USER_ID: 'x' }))))).filter(x => x != null);
+            ctx.shared.exhausted = t.ok === expected && expected < R;
+            log(id, `Result: ${t.ok} success, ${t.rej} rejected (4xx), ${t.bad} server errors / failures.`);
+            if (c.pool && rem != null) {
+                const after = await getRemaining();
+                if (after != null && after !== rem - t.ok) log(id, `Warning: View shows ${after} left, but ${rem} minus ${t.ok} successes = ${rem - t.ok}. Counts disagree.`);
+            }
+            if (t.bad > 0) { log(id, 'Server errors under load.'); return 'FAIL'; }
+            if (t.ok > expected) { log(id, `OVERSOLD by ${t.ok - expected}. Concurrent requests passed the stock check together.`); return 'FAIL'; }
+            if (t.ok < expected) { log(id, `UNDERSOLD: ${expected - t.ok} unit(s) refused although stock was available.`); return 'FAIL'; }
+            return 'PASS';
+        }
+
+        async function testRejection() {
+            const id = 'test-4', c = ctx.cfg;
+            const checks = [];
+            const one = async (label, payload, expectNote) => {
+                const r = await request('POST', c.reservePath, payload);
+                log(id, `${label}: HTTP ${r.status}. ${String(r.text).slice(0, 100)}`);
+                checks.push(kind(r));
+            };
+            let skippedSoldOut = false;
+            if (ctx.shared.exhausted) {
+                await one('Sold-out target, new user', fill(c.race, { USER_ID: `${ctx.runId}_late` }));
+            } else {
+                skippedSoldOut = true;
+                log(id, 'Sold-out check skipped: the race did not leave the target exhausted.');
+            }
+            await one('Invalid item', fill(c.reject, { USER_ID: `${ctx.runId}_inv` }));
+            if (c.crossBook) {
+                if (ctx.shared.winners && ctx.shared.winners.length) {
+                    await one('Rider already in another cab', fill(c.idem, { USER_ID: ctx.shared.winners[0] }));
+                } else log(id, 'Cross-cab check skipped: no race winner to reuse.');
+            }
+            if (checks.includes('bad')) return 'FAIL';
+            if (checks.includes('2xx')) { log(id, 'A request that must be rejected was accepted.'); return 'FAIL'; }
+            return skippedSoldOut ? 'WARN' : 'PASS';
+        }
+
+        async function testState() {
+            const id = 'test-5', c = ctx.cfg, seq = c.seq, last = seq.length - 1;
+            const recId = ctx.shared.idemId || (ctx.shared.raceIds || [])[0];
+            if (!recId) {
+                log(id, 'No record ID could be read from the Reserve responses, so a real record cannot be advanced. Set the ID field above (for example data.orderId) and run again.');
+                return 'WARN';
+            }
+            log(id, `Using record ${recId}, currently "${seq[c.startIdx]}". Sequence: ${seq.join(' > ')}`);
+            const patch = async (status) => {
+                const r = await request('PATCH', fill(c.statusPath, { ID: recId }), fill(c.state, { ID: recId, STATUS: status }));
+                return r;
+            };
+            const results = [];
+            const step = async (label, status, want) => {
+                const r = await patch(status), k = kind(r);
+                const good = k === want;
+                log(id, `${good ? 'ok  ' : 'BAD '} ${label} -> HTTP ${r.status} (wanted ${want})`);
+                results.push({ k, good });
+            };
+            let cur = c.startIdx;
+            await step(`Skip ${seq[cur]} > ${seq[last]}`, seq[last], '4xx');
+            await step(`Valid ${seq[cur]} > ${seq[cur + 1]}`, seq[cur + 1], '2xx');
+            if (results[results.length - 1].good) {
+                cur += 1;
+                await step(`Backward ${seq[cur]} > ${seq[cur - 1]}`, seq[cur - 1], '4xx');
+                if (last >= cur + 2) await step(`Skip ${seq[cur]} > ${seq[last]}`, seq[last], '4xx');
+            } else {
+                log(id, 'The valid next step was refused. Check the status field names, the exact spelling/case of the states, and the PATCH path.');
+            }
+            return results.every(r => r.good) ? 'PASS' : 'FAIL';
+        }
+
+        /* ------------------------------------------------------------------ */
+        /* Runner                                                              */
+        /* ------------------------------------------------------------------ */
+        async function runOne(id, fn) {
+            setStatus(id, 'RUNNING');
+            let status;
+            try { status = await fn(); }
+            catch (e) { log(id, 'Dashboard error: ' + e.message); status = 'FAIL'; }
+            setStatus(id, status);
+            return status;
+        }
+
+        const runBtn = $('runTestsBtn');
+        runBtn.addEventListener('click', runAllTests);
 
         async function runAllTests() {
+            const mock = $('mockMode').checked;
+            const base = $('baseUrl').value.trim().replace(/\/+$/, '');
+            if (!mock && !base) {
+                alert("Enter the team's Base URL (for example http://localhost:3000), or tick Simulation Mode to self-test the dashboard.");
+                return;
+            }
+            let cfg;
+            try { cfg = readConfig(); } catch (e) { alert(e.message); return; }
+
             runBtn.disabled = true;
-            runBtn.innerHTML = `<i class="fas fa-circle-notch spinner"></i> Running...`;
+            runBtn.innerHTML = '<i class="fas fa-circle-notch spinner"></i> Running...';
             resetUI();
-
-            // Reset Mock state
-            window.mockInventory = 1;
-
-            const baseUrl = document.getElementById('baseUrl').value.trim();
-            const isMock = !baseUrl || document.getElementById('mockMode').checked;
-
-            const paths = {
-                view: (isMock ? '' : baseUrl) + document.getElementById('viewPath').value,
-                reserve: (isMock ? '' : baseUrl) + document.getElementById('reservePath').value,
-                status: (isMock ? '' : baseUrl) + document.getElementById('statusPath').value,
+            ctx = {
+                mock, base, cfg, buggy: mock && $('mockBuggy').checked,
+                runId: 'r' + Date.now().toString(36),
+                shared: { idemId: null, idemUnits: 0, winners: [], raceIds: [], exhausted: false },
             };
+            if (mock) resetSim();
 
-            const templates = {
-                reserve: document.getElementById('reservePayload').value,
-                reject: document.getElementById('rejectionPayload').value,
-                state: document.getElementById('statePayload').value,
-            };
+            const out = {};
+            out['test-1'] = await runOne('test-1', test1);
+            out['test-3'] = await runOne('test-3', testIdempotency);
+            out['test-2'] = await runOne('test-2', testRace);
+            out['test-4'] = await runOne('test-4', testRejection);
+            out['test-5'] = await runOne('test-5', testState);
 
-            // TEST 1: VIEW LOAD
-            updateTestUI('test-1', 'RUNNING', 'Initiating 100 concurrent GET requests...');
-            let t1Pass = 0, t1Fail = 0;
-            const t1Promises = Array.from({ length: 100 }, () => smartFetch(paths.view, { method: 'GET' }));
-            const t1Results = await Promise.all(t1Promises);
-            t1Results.forEach(r => r.ok ? t1Pass++ : t1Fail++);
-            if (t1Pass > 90) {
-                updateTestUI('test-1', 'PASS', `Success! ${t1Pass}/100 requests returned 2xx.`);
-            } else {
-                updateTestUI('test-1', 'FAIL', `Failed. ${t1Fail} errors. Server might have crashed.`);
-            }
-
-            // TEST 2: THE RACE
-            updateTestUI('test-2', 'RUNNING', 'Initiating 10 concurrent POST requests with unique user IDs...');
-            let t2Successes = 0, t2Rejects = 0, t2Errors = 0;
-            const t2Promises = Array.from({ length: 10 }, (_, i) => {
-                const payload = templates.reserve.replace('{{USER_ID}}', `race_user_${i}`);
-                return smartFetch(paths.reserve, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: payload
-                });
-            });
-            const t2Results = await Promise.all(t2Promises);
-            t2Results.forEach(r => {
-                if (r.status >= 200 && r.status < 300) t2Successes++;
-                else if (r.status >= 400 && r.status < 500) t2Rejects++;
-                else t2Errors++;
-            });
-
-            updateTestUI('test-2', 'RUNNING', `Results: ${t2Successes} Success, ${t2Rejects} Handled Rejects, ${t2Errors} Server Errors`);
-            if (t2Successes === 1 && t2Rejects === 9 && t2Errors === 0) {
-                updateTestUI('test-2', 'PASS', 'Perfect race condition handling! Exactly 1 allocated.');
-            } else {
-                updateTestUI('test-2', 'FAIL', 'Race condition detected. System allowed multiple claims or crashed.');
-            }
-
-            // TEST 3: IDEMPOTENCY
-            updateTestUI('test-3', 'RUNNING', 'Initiating 10 concurrent POST requests with the SAME user ID...');
-            window.mockInventory = 1; // Reset mock inventory just in case
-            let t3Successes = 0, t3Rejects = 0, t3Crashes = 0;
-            const t3Promises = Array.from({ length: 10 }, () => {
-                const payload = templates.reserve.replace('{{USER_ID}}', `idem_user_99`);
-                return smartFetch(paths.reserve, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: payload
-                });
-            });
-            const t3Results = await Promise.all(t3Promises);
-            t3Results.forEach(r => {
-                if (r.status >= 200 && r.status < 300) t3Successes++;
-                else if (r.status >= 400 && r.status < 500) t3Rejects++;
-                else t3Crashes++;
-            });
-
-            updateTestUI('test-3', 'RUNNING', `Results: ${t3Successes} 2xx, ${t3Rejects} 4xx, ${t3Crashes} 5xx`);
-            if (t3Crashes === 0) {
-                updateTestUI('test-3', 'PASS', 'Idempotency handled safely. Server did not crash on rapid identical requests.');
-            } else {
-                updateTestUI('test-3', 'FAIL', 'Failed. Server threw 500 errors on rapid identical requests.');
-            }
-
-            // TEST 4: REJECTION LOGIC
-            updateTestUI('test-4', 'RUNNING', 'Sending POST for explicitly out-of-stock item...');
-            const t4Res = await smartFetch(paths.reserve, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: templates.reject
-            });
-            const t4Body = await t4Res.text();
-            if (t4Res.status >= 400 && t4Res.status < 500) {
-                updateTestUI('test-4', 'PASS', `Cleanly rejected with status ${t4Res.status}.\nResponse: ${t4Body}`);
-            } else {
-                updateTestUI('test-4', 'FAIL', `Expected 4xx, got ${t4Res.status}.\nResponse: ${t4Body}`);
-            }
-
-            // TEST 5: STATE MACHINE
-            updateTestUI('test-5', 'RUNNING', 'Sending PATCH to skip to final state...');
-            const t5Res = await smartFetch(paths.status, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: templates.state
-            });
-            const t5Body = await t5Res.text();
-            if (t5Res.status >= 400 && t5Res.status < 500) {
-                updateTestUI('test-5', 'PASS', `Invalid state jump rejected with status ${t5Res.status}.\nResponse: ${t5Body}`);
-            } else {
-                updateTestUI('test-5', 'FAIL', `Expected 4xx rejection, got ${t5Res.status}. State machine is bypassable.\nResponse: ${t5Body}`);
-            }
-
-            // Restore Button
+            showSummary(out);
             runBtn.disabled = false;
-            runBtn.innerHTML = `<i class="fas fa-play"></i> RUN AUTOMATED TESTS`;
+            runBtn.innerHTML = '<i class="fas fa-play"></i> RUN AUTOMATED TESTS';
         }
+
+        function showSummary(out) {
+            const vals = Object.values(out);
+            const pass = vals.filter(v => v === 'PASS').length;
+            const warn = vals.filter(v => v === 'WARN').length;
+            const fail = vals.filter(v => v === 'FAIL').length;
+            const pts = pass * 5, pending = warn * 5;
+            $('summary').classList.remove('hidden');
+            $('summaryTitle').textContent = `${ctx.mock ? '[SIMULATED] ' : ''}${pass}/5 passed: ${pts}/25 automated points` + (pending ? ` (+${pending} pending judge review)` : '');
+            $('summaryTitle').className = 'text-xl font-bold ' + (fail ? 'text-red-400' : warn ? 'text-yellow-300' : 'text-green-400');
+            $('summaryDetail').textContent = `${pass} pass, ${warn} need a judge's check, ${fail} fail. 5 points per test. Code review for atomic DB updates is separate.`;
+        }
+
+        $('copyBtn').addEventListener('click', async () => {
+            const lines = [];
+            lines.push(`ArchVerse report: ${$('teamName').value || '(no team name)'} | ${$('psSelect').selectedOptions[0].text} | ${ctx.mock ? 'SIMULATED' : ctx.base} | ${new Date().toLocaleString()}`);
+            lines.push($('summaryTitle').textContent);
+            TESTS.forEach(t => {
+                lines.push('', `${t.title}: ${$(`${t.id}-status`).dataset.status}`, $(`${t.id}-log`).textContent);
+            });
+            const text = lines.join('\n');
+            try { await navigator.clipboard.writeText(text); $('copyBtn').innerHTML = '<i class="fas fa-check"></i> Copied'; }
+            catch (e) { prompt('Copy the report:', text); }
+            setTimeout(() => { $('copyBtn').innerHTML = '<i class="fas fa-copy"></i> Copy report'; }, 1500);
+        });
     </script>
 </body>
 
