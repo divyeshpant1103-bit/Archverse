@@ -86,6 +86,7 @@
                             <option value="seats">PS 2: Seminar Hall Seat Booking</option>
                             <option value="rides">PS 3: Flash Ride-Sharing to ISBT</option>
                             <option value="coupons">PS 4: GRAFEST Coupon Drop</option>
+                            <option value="practice">PS 5: Chai Stall (practice / dry run)</option>
                         </select>
                     </div>
                     <div>
@@ -229,6 +230,13 @@
                 idem: '{"cabId": "cab_2", "userId": "{{USER_ID}}"}',
                 reject: '{"cabId": "cab_99", "userId": "{{USER_ID}}"}',
                 seq: 'Matched,Boarded,In Transit,Dropped'
+            },
+            practice: {
+                raceCount: 20, capacity: 5, startIdx: 0, pool: true, cross: '', idemAllOk: false,
+                race: '{"itemId": "chai_special", "userId": "{{USER_ID}}"}',
+                idem: '{"itemId": "chai_special", "userId": "{{USER_ID}}"}',
+                reject: '{"itemId": "does_not_exist", "userId": "{{USER_ID}}"}',
+                seq: 'Ordered,Brewing,Served'
             },
             coupons: {
                 raceCount: 100, capacity: 50, startIdx: 1, pool: true, cross: '', idemAllOk: true,
